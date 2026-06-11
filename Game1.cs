@@ -43,9 +43,9 @@ public class Game1 : Game {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
-        _spriteBatch.Begin();
+        _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
         
-        _spriteBatch.Draw(texture, new Vector2(100,100), Color.White);
+        _spriteBatch.Draw(texture, new Rectangle(100,100,150,150), Color.White);
         
         _spriteBatch.End();
         
