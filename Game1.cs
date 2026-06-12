@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Coding_With_Sphere;
 
@@ -8,7 +12,9 @@ public class Game1 : Game {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
-    Texture2D texture;
+    List<MovingSprite> sprites;
+    
+    MovingSprite sprite;
     
     public Game1() {
         _graphics = new GraphicsDeviceManager(this);
@@ -26,7 +32,14 @@ public class Game1 : Game {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
-        texture = Content.Load<Texture2D>("Player");
+        Texture2D texture = Content.Load<Texture2D>("Player");
+        
+        sprite = new MovingSprite(texture, Vector2.Zero, 1f);
+        sprites = new List<MovingSprite>();
+
+        for (int i = 0; i < 10; i++) {
+            sprites.Add(new MovingSprite(texture, new Vector2(0, 10 * i), i));
+        }
     }
 
     protected override void Update(GameTime gameTime) {
@@ -35,18 +48,21 @@ public class Game1 : Game {
             Exit();
 
         // TODO: Add your update logic here
-
-        base.Update(gameTime);
+        foreach (MovingSprite sprite in sprites) {
+            sprite.Update();
+        }
     }
 
     protected override void Draw(GameTime gameTime) {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
-        _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-        
-        _spriteBatch.Draw(texture, new Rectangle(100,100,150,150), Color.White);
-        
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        foreach (MovingSprite sprite in sprites) {
+            _spriteBatch.Draw(sprite.texture, sprite.Rect, Color.White);
+        }
+                 
         _spriteBatch.End();
         
         base.Draw(gameTime);
